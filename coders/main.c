@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+# include "codexion.h"
 
 int	main(int ac, char **av)
 {
@@ -18,7 +18,7 @@ int	main(int ac, char **av)
 
 	if (ac != 9)
 	{
-		printf("Error: invalid number of arguments\n");
+		write(2, "Error: invalid number of arguments\n", 35);
 		return (1);
 	}
 
@@ -27,7 +27,7 @@ int	main(int ac, char **av)
     {
         if (!is_valid_number(av[i]))
 		{
-			printf("Error: invalid numeric argument\n");
+			write(2, "Error: invalid numeric argument\n", 32);
 			return (1);
 		}
         i++;
@@ -35,8 +35,9 @@ int	main(int ac, char **av)
 
 	if (!is_valid_scheduler(av[8]))
 	{
-		printf("Error: invalid scheduler\n");
+		write(2, "Error: invalid scheduler\n", 25);
 		return (1);
 	}
+
 	return (0);
 }

@@ -10,21 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+# include "codexion.h"
+
 int is_valid_number(char *str)
 {
 	int i;
 
 	i = 0;
-	if(!str || str[0] == '\0')
+	if (!str || str[0] == '\0')
 		return (0);
 
-	while(str[i] != '\0')
+	while (str[i] != '\0')
 	{
-		if(str[i] < '0' || str[i] > '9')
+		if (str[i] < '0' || str[i] > '9')
 			return (0);
 		i++;
 	}
-	return (1);    
+
+	if (atoi(str) <= 0)
+		return (0);
+
+	return (1);
 }
 
 int	is_valid_scheduler(char *str)
@@ -32,10 +38,7 @@ int	is_valid_scheduler(char *str)
 	if (!str || str[0] == '\0')
 		return (0);
 	
-	if (str[0] == 'f' && str[1] == 'i' && str[2] == 'f' && str[3] == 'o' && str[4] == '\0')
-		return (1);
-
-	if (str[0] == 'e' && str[1] == 'd' && str[2] == 'f' && str[3] == '\0')
+	if (strcmp(str, "fifo") == 0 || strcmp(str, "edf") == 0)
 		return (1);
 
 	return (0);
