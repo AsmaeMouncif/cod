@@ -13,22 +13,24 @@
 #ifndef CODEXION_H
 # define CODEXION_H
 
+# include <pthread.h>
 # include <unistd.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# include <pthread.h>
+# include <sys/time.h>
 
-typedef struct s_sim t_sim;
+typedef struct s_sim    t_sim;
 
 typedef struct s_args
 {
-    int	number_of_coders;
-	int	time_to_burnout;
-	int	time_to_compile;
-	int	time_to_debug;
-	int	time_to_refactor;
-	int	number_of_compiles_required;
-	int	dongle_cooldown;
+    int number_of_coders;
+	int time_to_burnout;
+	int time_to_compile;
+	int time_to_debug;
+	int time_to_refactor;
+	int number_of_compiles_required;
+	int dongle_cooldown;
 	char *scheduler;
 }	t_args;
 
@@ -64,8 +66,29 @@ typedef struct s_sim
     pthread_t monitor;
 }	t_sim;
 
+typedef struct s_waitlist
+{
+	t_coder		**coders;
+	int			size;
+	int			capacity;
+}	t_waitlist;
+
 
 int is_valid_number(char *str);
 int	is_valid_scheduler(char *str);
+t_sim	*init_sim(char **av);
+void	free_sim(t_sim *sim);
+long	get_time_ms(void);
+void	ft_usleep(long ms, t_sim *sim);
+void	log_state(t_sim *sim, int id, char *state);
+void	*coder_routine(void *arg);
+void	take_dongle(t_dongle *dongle, t_coder *coder);
+void	release_dongle(t_dongle *dongle, t_sim *sim);
+void	*monitor_routine(void *arg);
+t_waitlist	*waitlist_create(void);
+void	waitlist_add(t_waitlist *wl, t_coder *coder);
+void	waitlist_remove(t_waitlist *wl, t_coder *coder);
+t_coder	*get_next_coder(t_waitlist *wl, t_sim *sim);
+int	try_take_dongle(t_dongle *dongle, t_coder *coder);
 
 #endif

@@ -15,6 +15,7 @@
 int	main(int ac, char **av)
 {
 	int	i;
+	t_sim	*sim;
 
 	if (ac != 9)
 	{
@@ -39,5 +40,27 @@ int	main(int ac, char **av)
 		return (1);
 	}
 
+	sim = init_sim(av);
+	if (!sim)
+	{
+		write(2, "Error: init failed\n", 19);
+		return (1);
+	}
+	pthread_create(&sim->monitor, NULL, monitor_routine, sim);
+	i = 0;
+	while (i < sim->args.number_of_coders)
+	{
+		pthread_create(&sim->coders[i].thread, NULL,
+			coder_routine, &sim->coders[i]);
+		i++;
+	}
+	i = 0;
+	while (i < sim->args.number_of_coders)
+	{
+		pthread_join(sim->coders[i].thread, NULL);
+		i++;
+	}
+	pthread_join(sim->monitor, NULL);
+	free_sim(sim);
 	return (0);
 }
